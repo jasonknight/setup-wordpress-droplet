@@ -21,9 +21,9 @@ thread_stack		= 1024K
 thread_cache_size       = 8K
 myisam_recover_options  = BACKUP
 max_connections        = 40
-table_cache = <?= tableCacheSize($mysql_memory); ?> 
+table_cache = <?= tableCacheSize($mysql_memory); ?>M  
 
-read_buffer_size = <?= readBufferSize($mysql_memory); ?> 
+read_buffer_size = <?= readBufferSize($mysql_memory); ?>K  
 
 # * Query Cache Configuration
 query_cache_type = 1
