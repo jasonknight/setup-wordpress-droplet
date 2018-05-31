@@ -12,15 +12,15 @@ lc-messages-dir	= /usr/share/mysql
 skip-external-locking
 bind-address		= <?= $private_ip ?>
 # * Fine Tuning
-key_buffer_size		= 64M
-max_allowed_packet	= 64M
+key_buffer_size		= 16M
+max_allowed_packet	= 16M
 thread_stack		= 1024K
 thread_cache_size       = 32
 myisam_recover_options  = BACKUP
 max_connections        = 100
 # * Query Cache Configuration
 query_cache_limit	= 8M
-query_cache_size = 64M
+query_cache_size = 32M
 # * Logging and Replication
 #general_log_file        = /var/log/mysql/mysql.log
 #general_log             = 1
@@ -44,7 +44,7 @@ max_binlog_size   = 100M
 # * InnoDB
 # InnoDB is enabled by default with a 10MB datafile in /var/lib/mysql/.
 # Read the manual for more InnoDB related options. There are many!
-innodb_buffer_pool_size = <?= $mysql_buffer_pool_size ?>
+innodb_buffer_pool_size = <?= (floor($available_memory * 0.33)); ?>MB
 # * Security Features
 # ssl-ca=/etc/mysql/cacert.pem
 # ssl-cert=/etc/mysql/server-cert.pem
