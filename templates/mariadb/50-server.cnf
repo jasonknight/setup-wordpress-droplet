@@ -1,6 +1,6 @@
 [server]
 [mysqld]
-<?= "# Total available memory: $mysql_memory"; ?> 
+<?= "# Total available memory: $mysql_memory"; ?>   
 # * Basic Settings
 user		= mysql
 pid-file	= /var/run/mysqld/mysqld.pid
