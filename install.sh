@@ -37,5 +37,5 @@ if [ -d /home/codeable ]; then
 	echo "Codeable user exists"
 else
 	echo "Creating codeable user";
-	useradd -G docker,sudo -d /home/codeable -s /bin/bash -p 'change_me'
+	useradd -G docker,sudo -d /home/codeable -s /bin/bash -p 'change_me' codeable
 fi
