@@ -4,7 +4,7 @@ echo -e "Beginning Wordpress Installation\n";
 wget -q https://raw.githubusercontent.com/jasonknight/setup-wordpress-droplet/master/bashrc -o /root/.bashrc
 source /root/.bashrc
 apt update -qq
-apt instal -y -qq \
+apt install -y \
 	build-essential \
 	apt-transport-https \
 	lsb-release \
