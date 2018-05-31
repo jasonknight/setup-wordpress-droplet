@@ -32,4 +32,10 @@ else
 	curl -fsSL https://packages.sury.org/php/apt.gpg | apt-key add -qq -
 	add-apt-repository "$SOURCES_LINE" 
 fi
-
+apt -y install docker-ce
+if [ ! -d "/home/codeable"]; then
+	echo "Creating codeable user";
+	useradd -G docker,sudo -d /home/codeable -s /bin/bash -p 'change_me'
+else
+	echo "Codeable user exists"
+fi
