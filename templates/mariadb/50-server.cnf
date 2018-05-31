@@ -18,7 +18,7 @@ bind-address = <?= $private_ip ?>
 key_buffer_size		= <?= keyBufferSize($mysql_memory); ?>M
 max_allowed_packet	= 16M
 thread_stack		= 1024K
-thread_cache_size       = 32
+thread_cache_size       = 8K
 myisam_recover_options  = BACKUP
 max_connections        = 40
 table_cache = <?= tableCacheSize($mysql_memory); ?> 
