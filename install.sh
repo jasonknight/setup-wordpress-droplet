@@ -74,6 +74,8 @@ apt install -y \
 apt install -y \
 	mysql-server \
 	mysql-client
+cp -f /etc/mysql/mariadb.conf.d/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf.org
+php utils.php mariadb/50-server.cnf > /etc/mysql/mariadb.conf.d/50-server.cnf
 apt install -y \
 	php7.2-mysql
 
