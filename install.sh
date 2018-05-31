@@ -33,7 +33,7 @@ else
 	add-apt-repository "$SOURCES_LINE" 
 fi
 apt -y install docker-ce
-if [ -d "/home/codeable" ]; then
+if [ -d /home/codeable ]; then
 	echo "Codeable user exists"
 else
 	echo "Creating codeable user";
