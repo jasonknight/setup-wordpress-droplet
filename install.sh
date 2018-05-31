@@ -40,6 +40,7 @@ else
 	echo "Creating codeable user";
 	useradd -G docker,sudo -d /home/codeable -s /bin/bash -p 'change_me' -m codeable
 	wget https://raw.githubusercontent.com/jasonknight/setup-wordpress-droplet/master/templates/bashrc -qO- > /home/codeable/.bashrc
+	chown codeable:codeable -R /home/codeable
 fi
 systemctl enable docker
 
@@ -49,7 +50,6 @@ apt update -qq
 apt install -y \
 	php7.2 \
 	php7.2-cli \
-	php7.2-common \
 	php7.2-curl
 
 
