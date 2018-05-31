@@ -10,17 +10,22 @@ datadir		= /var/lib/mysql
 tmpdir		= /tmp
 lc-messages-dir	= /usr/share/mysql
 skip-external-locking
-bind-address		= <?= $private_ip ?>
+bind-address = <?= $private_ip ?>
+
 # * Fine Tuning
-key_buffer_size		= 16M
+key_buffer_size		= <?= keyBufferSize($mysql_memory); ?>M
 max_allowed_packet	= 16M
 thread_stack		= 1024K
 thread_cache_size       = 32
 myisam_recover_options  = BACKUP
-max_connections        = 100
+max_connections        = 40
+table_cache = <?= tableCacheSize($mysql_memory); ?>
+read_buffer_size = <?= readBufferSize($mysql_memory); ?>
+
 # * Query Cache Configuration
-query_cache_limit	= 8M
-query_cache_size = 32M
+query_cache_type = 1
+query_cache_limit	= <?= queryCacheLimit(queryCacheSize($mysql_memory)); ?>K
+query_cache_size = <?= queryCacheSize($mysql_memory); ?>M
 # * Logging and Replication
 #general_log_file        = /var/log/mysql/mysql.log
 #general_log             = 1
@@ -44,7 +49,8 @@ max_binlog_size   = 100M
 # * InnoDB
 # InnoDB is enabled by default with a 10MB datafile in /var/lib/mysql/.
 # Read the manual for more InnoDB related options. There are many!
-innodb_buffer_pool_size = <?= (floor($available_memory * 0.33)); ?>MB
+innodb_buffer_pool_size = <?= (floor($mysql_memory * 0.10)); ?>MB
+
 # * Security Features
 # ssl-ca=/etc/mysql/cacert.pem
 # ssl-cert=/etc/mysql/server-cert.pem
