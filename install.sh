@@ -35,8 +35,21 @@ fi
 apt -y install docker-ce
 groupadd docker
 if [ -d /home/codeable ]; then
-	echo "Codeable user exists"
+	echo "Codeable user exists!"
 else
 	echo "Creating codeable user";
 	useradd -G docker,sudo -d /home/codeable -s /bin/bash -p 'change_me' -m codeable
+	wget https://raw.githubusercontent.com/jasonknight/setup-wordpress-droplet/master/templates/bashrc -qO- > /home/codeable/.bashrc
 fi
+systemctl enable docker
+
+# Install PHP
+
+apt update -qq
+apt install -y \
+	php7.2 \
+	php7.2-cli \
+	php7.2-common \
+	php7.2-curl
+
+
