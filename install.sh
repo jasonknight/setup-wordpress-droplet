@@ -71,4 +71,8 @@ apt install -y \
 	php-redis \
 	nginx
 
+apt instal -y \
+	php7.2-pgsql \
+	php7.2-mysql
+
 
