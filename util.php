@@ -14,7 +14,7 @@ $base_url = "https://raw.githubusercontent.com/jasonknight/setup-wordpress-dropl
 if ( isset($_SERVER['argv']) && isset($_SERVER['argv'][1] ) ) {
 	$contents = @file_get_contents($base_url . "/" . $_SERVER['argv'][1]);
 	if ( ! empty( $contents ) ) {
-		file_put_contents("/tmp/working.php");
+		file_put_contents("/tmp/working.php", $contents);
 		include("/tmp/working.php");
 		unlink("/tmp/working.php");
 	} else {
