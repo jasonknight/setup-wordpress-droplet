@@ -50,7 +50,7 @@ max_binlog_size   = 100M
 # * InnoDB
 # InnoDB is enabled by default with a 10MB datafile in /var/lib/mysql/.
 # Read the manual for more InnoDB related options. There are many!
-innodb_buffer_pool_size = <?= (floor($mysql_memory * 0.15)); ?>MB
+innodb_buffer_pool_size = <?= (floor($mysql_memory * 0.25)); ?>MB
 
 # * Security Features
 # ssl-ca=/etc/mysql/cacert.pem
