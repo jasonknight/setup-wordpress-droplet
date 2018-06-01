@@ -98,22 +98,32 @@ if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 		tar -zxf latest.tar.gz
 		rm latest.tar.gz
 		cd -
+		cd "$HOMEDIR/wordpress/wp-content/plugins"
+		git clone "https://github.com/jasonknight/wp-redis.git"
+		cd -
+		cd "$HOMEDIR/wordpress/wp-content"
+		ln -sf "./plugins/wp-redis/object-cache.php" "./object-cache.php"
+		cd -
 		
 		declare -a arr=('WORDPRESS_AUTH_KEY' 'WORDPRESS_SECURE_AUTH_KEY' 'WORDPRESS_LOGGED_IN_KEY' 'WORDPRESS_NONCE_KEY' 'WORDPRESS_AUTH_SALT' 'WORDPRESS_SECURE_AUTH_SALT' 'WORDPRESS_LOGGED_IN_SALT' 'WORDPRESS_NONCE_SALT');
 		for i in "${arr[@]}"
 		do
 			echo "export $i='"$(cat /dev/urandom | tr -dc '_a-z-A-Z0-9!~@#$%^&*()_+=/<>?,.ŽŒ£©µ¿ÇßæñøƱǂ' | fold -w 64 | head -n 1)"'" >> "/etc/environment"
 		done
-		echo "export WORDPRESS_REDIS_HOST='127.0.0.1'" >> /etc/environment
-		echo "export WORDPRESS_REDIS_PORT=6379" >> /etc/environment
-		echo "export WORDPRESS_REDIS_AUTH='$(cat /dev/urandom | tr -dc '_a-zAZ0-9-' | fold -w 12 | head -n 1)'" >> /etc/environment
-		echo "export WORDPRESS_REDIS_DATABASE=0" >> /etc/environment
-		echo "export WORDPRESS_DB_NAME='$(hostname)_wordpress'" >> /etc/environment
-		echo "export WORDPRESS_DB_USER='$(hostname)_user'" >> /etc/environment
-		echo "export WORDPRESS_DB_PASSWORD='$(cat /dev/urandom | tr -dc '_a-zAZ0-9-' | fold -w 12 | head -n 1)'" >> /etc/environment
-		echo "export WORDPRESS_DB_HOST='127.0.0.1'" >> /etc/environment
+		for i in 'dev' 'staging' 'production'
+		do
+			up=${i^^}
+			echo "export WORDPRESS_${up}_REDIS_HOST='127.0.0.1'" >> /etc/environment
+			echo "export WORDPRESS_${up}_REDIS_PORT=6379" >> /etc/environment
+			echo "export WORDPRESS_${up}_REDIS_AUTH='$(cat /dev/urandom | tr -dc '_a-zAZ0-9-' | fold -w 12 | head -n 1)'" >> /etc/environment
+			echo "export WORDPRESS_${up}_REDIS_DATABASE=0" >> /etc/environment
+			echo "export WORDPRESS_${up}_DB_NAME='$(hostname)_wordpress_${i}'" >> /etc/environment
+			echo "export WORDPRESS_${up}_DB_USER='$(hostname)_${i}'" >> /etc/environment
+			echo "export WORDPRESS_${up}_DB_PASSWORD='$(cat /dev/urandom | tr -dc '_a-zAZ0-9-' | fold -w 12 | head -n 1)'" >> /etc/environment
+			echo "export WORDPRESS_${up}_DB_HOST='127.0.0.1'" >> /etc/environment
+	done
 		source /etc/environment
-		if [ ! "$WORDPRESS_DB_NAME" == "$(hostname)_wordpress" ]; then
+		if [ ! "$WORDPRESS_PRODUCTION_DB_NAME" == "$(hostname)_wordpress_production" ]; then
 			echo "Failed to load env!";
 		else
 			echo "DB is: $WORDPRESS_DB_NAME";

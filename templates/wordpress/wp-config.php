@@ -16,19 +16,19 @@
  *
  * @package WordPress
  */
-
+$environment = "PRODUCTION";
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', @getenv("WORDPRESS_DB_NAME"));
+define('DB_NAME', @getenv("WORDPRESS_{$environment}_DB_NAME"));
 
 /** MySQL database username */
-define('DB_USER', @getenv("WORDPRESS_DB_USER"));
+define('DB_USER', @getenv("WORDPRESS_{$environment}_DB_USER"));
 
 /** MySQL database password */
-define('DB_PASSWORD', @getenv("WORDPRESS_DB_PASSWORD"));
+define('DB_PASSWORD', @getenv("WORDPRESS_{$environment}_DB_PASSWORD"));
 
 /** MySQL hostname */
-define('DB_HOST', @getenv("WORDPRESS_DB_HOST"));
+define('DB_HOST', @getenv("WORDPRESS_{$environment}_DB_HOST"));
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8mb4');
@@ -77,14 +77,18 @@ $table_prefix  = 'wp_';
  * @link https://codex.wordpress.org/Debugging_in_WordPress
  */
 define('WP_DEBUG', false);
-$_the_url = 'https://<?= $fqdn ?>';
+if ( $environment == "production" ) {
+	$_the_url = 'https://<?= $fqdn ?>';
+} else {
+	$_the_url = "https://" . strtolower($environment) . ".<?= $fqdn ?>';
+}
 define('WP_HOME',$_the_url);
 define('WP_SITEURL',$_the_url);
 $redis_server = array(
-	'host'     => @getenv("WORDPRESS_REDIS_HOST"),
-	'port'     => @getenv("WORDPRESS_REDIS_PORT"), //6379,
-	'auth'     => @getenv("WORDPRESS_REDIS_AUTH"),
-	'database' => @getenv("WORDPRESS_REDIS_DATABASE"), // Optionally use a specific numeric Redis database. Default is 0.
+	'host'     => @getenv("WORDPRESS_{$environment}_REDIS_HOST"),
+	'port'     => @getenv("WORDPRESS_{$environment}_REDIS_PORT"), //6379,
+	'auth'     => @getenv("WORDPRESS_{$environment}_REDIS_AUTH"),
+	'database' => @getenv("WORDPRESS_{$environment}_REDIS_DATABASE"), // Optionally use a specific numeric Redis database. Default is 0.
 );
 
 /* That's all, stop editing! Happy blogging. */
