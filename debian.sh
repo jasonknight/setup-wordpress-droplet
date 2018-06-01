@@ -74,6 +74,7 @@ apt install -y \
 	php7.2-intl \
 	php7.2-zip
 ln -sf /etc/php/7.1 /etc/php/active
+php util.php fpm/pool.d/www.conf > /etc/php/active/fpm/pool.d/www.conf
 if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 	echo "Installing nginx";
   apt install -y \

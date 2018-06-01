@@ -1,4 +1,11 @@
 <?php
+function maxMemoryPerPHPScript($a) {
+	$p = floor($a * 0.33 / 5);
+	if ($p > 256) {
+		$p = 256;
+	}
+	return $p;
+}
 function queryCacheSize($available) {
 	// we only allow 17%
 	$assigned_to_mysql = $available;
@@ -46,7 +53,7 @@ $free = explode("\n",shell_exec("free -m | grep 'Mem:'"));
 preg_match("/Mem.\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/",$free[0],$matches);
 $available_memory = $matches[6];
 $mysql_memory = $available_memory * 0.40;
-$base_url = "https://raw.githubusercontent.com/jasonknight/setup-wordpress-droplet/master/templates/";
+$base_url = "https://raw.githubusercontent.com/jasonknight/setup-wordpress-droplet/master/templates";
 $fqdn = trim(@shell_exec("hostname --fqdn"));
 if ( ! empty($fqdn) ) {
 	$fqdn = "$fqdn.com";
