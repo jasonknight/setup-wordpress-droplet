@@ -73,23 +73,23 @@ apt install -y -qq \
 	php7.2-intl \
 	php7.2-zip
 ln -sf /etc/php/7.2 /etc/php/active
-php util.php fpm/pool.d/www.conf > /etc/php/active/fpm/pool.d/www.conf
+php "$PWD/util.php" fpm/pool.d/www.conf > /etc/php/active/fpm/pool.d/www.conf
 service php7.2-fpm restart
 if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 	echo "Installing nginx";
-  apt install -y \
+  apt install -y -qq \
 		php-redis \
 		nginx
 	# Now we configure the website, we assume it is hostname.com, so name your servers 
 	# accordingly and this is automatical setup
 	rm /etc/nginx/sites-enabled/default
 	rm /etc/nginx/sites-available/default
-	php util.php nginx/nginx.conf > /etc/nginx/nginx.conf
+	php "$PWD/util.php" nginx/nginx.conf > /etc/nginx/nginx.conf
 	mkdir -p /etc/nginx/global
-	php util.php nginx/global/restrictions.conf > /etc/nginx/global/restrictions.conf
+	php "$PWD/util.php" nginx/global/restrictions.conf > /etc/nginx/global/restrictions.conf
 	if [[ $@ == *"wordpress"* ]]; then
 		echo "Installing wordpress"
-		php util.php nginx/global/wordpress.conf > /etc/nginx/global/wordpress.conf
+		php "$PWD/util.php" nginx/global/wordpress.conf > /etc/nginx/global/wordpress.conf
 		mkdir -p "/var/www/$(hostname).com/logs"
 		cd $HOMEDIR
 		wget -q https://wordpress.org/latest.tar.gz
@@ -115,22 +115,22 @@ if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 		else
 			echo "DB is: $WORDPRESS_DB_NAME";
 		fi
-		php util.php wordpress/wp-config.php > "$HOMEDIR/wordpress/wp-config.php"
+		php "$PWD/util.php" wordpress/wp-config.php > "$HOMEDIR/wordpress/wp-config.php"
 		ln -sf "$HOMEDIR/wordpress" "/var/www/$(hostname).com/wordpress"
 		chown www-data:www-data -R "$HOMEDIR/wordpress"
 	fi
-	php util.php nginx/website.conf > /etc/nginx/sites-available/website.conf
+	php "$PWD/util.php" nginx/website.conf > /etc/nginx/sites-available/website.conf
 	ln -sf /etc/ngins/sites-available/website.conf /etc/nginx/sites-enabled/website.conf
 	nginx -t
 	service nginx restart
 fi
 if [[ $@ == *"mysql"* ]] || [[ $@ == *"wordpress"* ]]; then
 	echo "Installing mysql";
-	apt install -y \
+	apt install -y -qq \
 		mysql-server \
 		mysql-client
 	cp -f /etc/mysql/mariadb.conf.d/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf.org
-	php util.php mariadb/50-server.cnf > /etc/mysql/mariadb.conf.d/50-server.cnf
+	php "$PWD/util.php" mariadb/50-server.cnf > /etc/mysql/mariadb.conf.d/50-server.cnf
 	apt install -y \
 		php7.2-mysql
 fi
