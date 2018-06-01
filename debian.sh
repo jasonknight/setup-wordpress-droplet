@@ -72,7 +72,7 @@ apt install -y \
 	php7.2-dev \
 	php7.2-intl \
 	php7.2-zip
-ln -sf /etc/php/7.1 /etc/php/active
+ln -sf /etc/php/7.2 /etc/php/active
 php util.php fpm/pool.d/www.conf > /etc/php/active/fpm/pool.d/www.conf
 service php7.2-fpm restart
 if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
@@ -88,6 +88,7 @@ if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 	mkdir -p /etc/nginx/global
 	php util.php nginx/global/restrictions.conf > /etc/nginx/global/restrictions.conf
 	if [[ $@ == *"wordpress"* ]]; then
+		echo "Installing wordpress"
 		php util.php nginx/global/wordpress.conf > /etc/nginx/global/wordpress.conf
 		mkdir -p "/var/www/$(hostname).com/logs"
 		cd $HOMEDIR
