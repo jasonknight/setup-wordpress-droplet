@@ -101,10 +101,10 @@ if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 		do
 			echo "export $i='"$(cat /dev/urandom | tr -dc '_a-z-A-Z0-9!~@#$%^&*()_+=/<>?,.ŽŒ£©µ¿ÇßæñøƱǂ' | fold -w 64 | head -n 1)"'" >> "/etc/environment"
 		done
-		echo "WORDPRESS_REDIS_HOST='127.0.0.1'" >> /etc/environment
-		echo "WORDPRESS_REDIS_PORT=6379" >> /etc/environment
-		echo "WORDPRESS_REDIS_AUTH='$(cat /dev/urandom | tr -dc '_a-zAZ0-9-' | fold -w 12 | head -n 1)'" >> /etc/environment
-		echo "WORDPRESS_REDIS_DATABASE=0" >> /etc/environment
+		echo "export WORDPRESS_REDIS_HOST='127.0.0.1'" >> /etc/environment
+		echo "export WORDPRESS_REDIS_PORT=6379" >> /etc/environment
+		echo "export WORDPRESS_REDIS_AUTH='$(cat /dev/urandom | tr -dc '_a-zAZ0-9-' | fold -w 12 | head -n 1)'" >> /etc/environment
+		echo "export WORDPRESS_REDIS_DATABASE=0" >> /etc/environment
 		php util.php wordpress/wp-config.php > "$HOMEDIR/wordpress/wp-config.php"
 		ln -sf "$HOMEDIR/wordpress" "/var/www/$(hostname).com/wordpress"
 		chown www-data:www-data -R "$HOMEDIR/wordpress"
