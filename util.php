@@ -62,6 +62,9 @@ if ( isset($_SERVER['argv']) && isset($_SERVER['argv'][1] ) ) {
 	$contents = @file_get_contents($base_url . "/" . $_SERVER['argv'][1]);
 	if ( ! empty( $contents ) ) {
 		file_put_contents("/tmp/working.php", $contents);
+		if ( preg_match("/.+\.php$/",$_SERVER['argv'][1]) ) {
+			echo "<?php\n";
+		}
 		include("/tmp/working.php");
 		unlink("/tmp/working.php");
 	} else {

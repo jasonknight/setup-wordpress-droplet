@@ -89,10 +89,29 @@ if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 	php util.php nginx/global/restrictions.conf > /etc/nginx/global/restrictions.conf
 	if [[ $@ == *"wordpress"* ]]; then
 		php util.php nginx/global/wordpress.conf > /etc/nginx/global/wordpress.conf
+		mkdir -p "/var/www/$(hostname).com/logs"
+		cd $HOMEDIR
+		wget https://wordpress.org/latest.tar.gz
+		tar -zxf latest.tar.gz
+		rm latest.tar.gz
+		
+		declare -a arr=('WORDPRESS_AUTH_KEY' 'WORDPRESS_SECURE_AUTH_KEY' 'WORDPRESS_LOGGED_IN_KEY' 'WORDPRESS_NONCE_KEY' 'WORDPRESS_AUTH_SALT' 'WORDPRESS_SECURE_AUTH_SALT' 'WORDPRESS_LOGGED_IN_SALT' 'WORDPRESS_NONCE_SALT');
+		for i in "${arr[@]}"
+		do
+			echo "$i="$(cat /dev/urandom | tr -dc '_a-z-A-Z0-9!~@#$%^&*()_+=/<>?,.ŽŒ£©µ¿ÇßæñøƱǂ' | fold -w 64 | head -n 1) >> "/etc/environment"
+		done
+		echo "WORDPRESS_REDIS_HOST=127.0.0.1" >> /etc/environment
+		echo "WORDPRESS_REDIS_PORT=6379" >> /etc/environment
+		echo "WORDPRESS_REDIS_AUTH=$(cat /dev/urandom | tr -dc '_a-zAZ0-9-' | fold -w 12 | head -n 1)" >> /etc/environment
+		echo "WORDPRESS_REDIS_DATABASE=0" >> /etc/environment
+		php util.php wordpress/wp-config.php > "$HOMEDIR/wordpress/wp-config.php"
+		ln -sf "$HOMEDIR/wordpress" "/var/www/$(hostname).com/wordpress"
+		chown www-data:www-data -R "$HOMEDIR/wordpress"
 	fi
 	php util.php nginx/website.conf > /etc/nginx/sites-available/website.conf
 	ln -sf /etc/ngins/sites-available/website.conf /etc/nginx/sites-enabled/website.conf
 	nginx -t
+	service nginx restart
 fi
 if [[ $@ == *"mysql"* ]] || [[ $@ == *"wordpress"* ]]; then
 	echo "Installing mysql";
