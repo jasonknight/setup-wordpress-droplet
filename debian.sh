@@ -112,6 +112,8 @@ if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 		source /etc/environment
 		if [ ! "$WORDPRESS_DB_NAME" == "$(hostname)_wordpress" ]; then
 			echo "Failed to load env!";
+		else
+			echo "DB is: $WORDPRESS_DB_NAME";
 		fi
 		php util.php wordpress/wp-config.php > "$HOMEDIR/wordpress/wp-config.php"
 		ln -sf "$HOMEDIR/wordpress" "/var/www/$(hostname).com/wordpress"

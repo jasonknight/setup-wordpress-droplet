@@ -49,6 +49,7 @@ if ( ! empty($ifconfig) && isset($ifconfig[1]) ) {
 if ( $matches && ! empty($matches) ) {
 	$private_ip = $matches[1];
 }
+$private_ip = '127.0.0.1';
 $free = explode("\n",shell_exec("free -m | grep 'Mem:'"));
 preg_match("/Mem.\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/",$free[0],$matches);
 $available_memory = $matches[6];
