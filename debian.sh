@@ -94,6 +94,7 @@ if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 		echo "Installing wordpress"
 		php "$PWD/util.php" nginx/global/wordpress.conf > /etc/nginx/global/wordpress.conf
 		cd $HOMEDIR
+		rm -fr wordpress
 		wget -q https://wordpress.org/latest.tar.gz
 		tar -zxf latest.tar.gz
 		rm latest.tar.gz
