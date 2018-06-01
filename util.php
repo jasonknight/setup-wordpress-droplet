@@ -47,6 +47,11 @@ preg_match("/Mem.\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/",$free[0],$ma
 $available_memory = $matches[6];
 $mysql_memory = $available_memory * 0.40;
 $base_url = "https://raw.githubusercontent.com/jasonknight/setup-wordpress-droplet/master/templates/";
+$fqdn = trim(@shell_exec("hostname --fqdn"));
+if ( ! empty($fqdn) ) {
+	$fqdn = "$fqdn.com";
+}
+exit(0);
 if ( isset($_SERVER['argv']) && isset($_SERVER['argv'][1] ) ) {
 	$contents = @file_get_contents($base_url . "/" . $_SERVER['argv'][1]);
 	if ( ! empty( $contents ) ) {
