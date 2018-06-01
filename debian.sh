@@ -115,4 +115,4 @@ else
 	echo "SWAP Exists"
 fi
 echo "SWAP Info"
-cat /proc/meminfo | grep -ir "swap"
+cat /proc/meminfo | grep -i "swap"
