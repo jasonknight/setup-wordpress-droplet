@@ -155,7 +155,7 @@ if [[ $@ == *"mysql"* ]] || [[ $@ == *"wordpress"* ]]; then
 		mysql-client
 	cp -f /etc/mysql/mariadb.conf.d/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf.org
 	php "$PWD/util.php" mariadb/50-server.cnf > /etc/mysql/mariadb.conf.d/50-server.cnf
-	apt install -y \
+	apt install -y -qq \
 		php7.2-mysql
 fi
 if [ ! -f /swapfile ]; then
