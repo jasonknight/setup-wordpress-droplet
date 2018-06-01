@@ -119,6 +119,7 @@ if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 		done
 		for i in 'dev' 'staging' 'production'
 		do
+			echo "Setting up $i"
 			up=${i^^}
 			mkdir -p "$HOMEDIR/${i}.$(hostname).com/logs"
 			echo "export WORDPRESS_${up}_REDIS_HOST='127.0.0.1'" >> /etc/environment
