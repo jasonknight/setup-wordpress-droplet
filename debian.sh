@@ -6,7 +6,7 @@ USERNAME=$1
 echo -e "Beginning Debian Installation for $USERNAME\n";
 wget https://raw.githubusercontent.com/jasonknight/setup-wordpress-droplet/master/templates/bashrc -qO- > /root/.bashrc
 apt update -qq
-apt install -y \
+apt install -y -qq \
 	build-essential \
 	apt-transport-https \
 	lsb-release \
@@ -35,7 +35,7 @@ else
 	curl -fsSL https://packages.sury.org/php/apt.gpg | apt-key add -qq -
 	add-apt-repository "$SOURCES_LINE" 
 fi
-apt -y install docker-ce
+apt -y -qq install docker-ce
 groupadd docker
 HOMEDIR="/home/$USERNAME"
 if [ -d "$HOMEDIR" ]; then
@@ -51,7 +51,7 @@ systemctl enable docker
 # Install PHP
 
 apt update -qq
-apt install -y \
+apt install -y -qq \
 	php7.2 \
 	php7.2-cli \
 	php7.2-curl \
@@ -92,7 +92,7 @@ if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 		php util.php nginx/global/wordpress.conf > /etc/nginx/global/wordpress.conf
 		mkdir -p "/var/www/$(hostname).com/logs"
 		cd $HOMEDIR
-		wget https://wordpress.org/latest.tar.gz
+		wget -q https://wordpress.org/latest.tar.gz
 		tar -zxf latest.tar.gz
 		rm latest.tar.gz
 		
@@ -105,6 +105,14 @@ if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 		echo "export WORDPRESS_REDIS_PORT=6379" >> /etc/environment
 		echo "export WORDPRESS_REDIS_AUTH='$(cat /dev/urandom | tr -dc '_a-zAZ0-9-' | fold -w 12 | head -n 1)'" >> /etc/environment
 		echo "export WORDPRESS_REDIS_DATABASE=0" >> /etc/environment
+		echo "export WORDPRESS_DB_NAME='$(hostname)_wordpress'" >> /etc/environment
+		echo "export WORDPRESS_DB_USER='$(hostname)_user'" >> /etc/environment
+		echo "export WORDPRESS_DB_PASSWORD='$(cat /dev/urandom | tr -dc '_a-zAZ0-9-' | fold -w 12 | head -n 1)'" >> /etc/environment
+		echo "export WORDPRESS_DB_HOST='127.0.0.1'" >> /etc/environment
+		source /etc/environment
+		if [ ! "$WORDPRESS_DB_NAME" == "$(hostname)_wordpress" ]; then
+			echo "Failed to load env!";
+		fi
 		php util.php wordpress/wp-config.php > "$HOMEDIR/wordpress/wp-config.php"
 		ln -sf "$HOMEDIR/wordpress" "/var/www/$(hostname).com/wordpress"
 		chown www-data:www-data -R "$HOMEDIR/wordpress"
