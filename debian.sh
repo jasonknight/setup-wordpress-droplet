@@ -1,6 +1,6 @@
 #!/bin/bash
-if [[ $@ == *"wordpres"* ]]; then
-	echo "Will be setting up wordpress";
+if [[ $@ == *"wordpress"* ]]; then
+	echo "Will be setting up wordpress PWD is $PWD";
 fi
 USERNAME=$1
 echo -e "Beginning Debian Installation for $USERNAME\n";
