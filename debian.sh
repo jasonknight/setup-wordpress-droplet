@@ -2,6 +2,9 @@
 if [[ $@ == *"wordpress"* ]]; then
 	echo "Will be setting up wordpress PWD is $PWD";
 fi
+if [[ $@ == *"fresh"* ]]; then
+	rm -fr "/var/www/$(hostname).com"
+fi
 USERNAME=$1
 echo -e "Beginning Debian Installation for $USERNAME\n";
 wget https://raw.githubusercontent.com/jasonknight/setup-wordpress-droplet/master/templates/bashrc -qO- > /root/.bashrc
@@ -90,7 +93,6 @@ if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 	if [[ $@ == *"wordpress"* ]]; then
 		echo "Installing wordpress"
 		php "$PWD/util.php" nginx/global/wordpress.conf > /etc/nginx/global/wordpress.conf
-		mkdir -p "/var/www/$(hostname).com/logs"
 		cd $HOMEDIR
 		wget -q https://wordpress.org/latest.tar.gz
 		tar -zxf latest.tar.gz
@@ -119,7 +121,12 @@ if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 		php "$PWD/util.php" wordpress/wp-config.php > "$HOMEDIR/wordpress/wp-config.php"
 		ln -sf "$HOMEDIR/wordpress" "/var/www/$(hostname).com/wordpress"
 		chown www-data:www-data -R "$HOMEDIR/wordpress"
+		chown www-data:www-data -R "$HOMEDIR/logs"
+		chmod g+w -R "$HOMEDIR/wordpress"
 	fi
+	mkdir -p "/$HOMEDIR/logs"
+	chmod g+w -R "$HOMEDIR/logs"
+	ln -sf "$HOMEDIR/logs" "/var/www/$(hostname).com/logs"
 	php "$PWD/util.php" nginx/website.conf > /etc/nginx/sites-available/website.conf
 	ln -sf /etc/ngins/sites-available/website.conf /etc/nginx/sites-enabled/website.conf
 	nginx -t
