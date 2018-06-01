@@ -2,7 +2,6 @@
 if [[ $@ == *"wordpres"* ]]; then
 	echo "Will be setting up wordpress";
 fi
-exit 0;
 USERNAME=$1
 echo -e "Beginning Debian Installation for $USERNAME\n";
 wget https://raw.githubusercontent.com/jasonknight/setup-wordpress-droplet/master/templates/bashrc -qO- > /root/.bashrc
@@ -75,6 +74,7 @@ apt install -y \
 	php7.2-zip
 ln -sf /etc/php/7.1 /etc/php/active
 php util.php fpm/pool.d/www.conf > /etc/php/active/fpm/pool.d/www.conf
+service php7.2-fpm restart
 if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 	echo "Installing nginx";
   apt install -y \
