@@ -107,9 +107,6 @@ if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 		cd -
 		cd $HOMEDIR
 		php "$PWD/util.php" wordpress/wp-config.php > "$HOMEDIR/wordpress/wp-config.php"
-		chown www-data:www-data -R "$HOMEDIR/wordpress"
-		chown www-data:www-data -R "$HOMEDIR/logs"
-		chmod g+w -R "$HOMEDIR/wordpress"
 		cd -
 		
 		declare -a arr=('WORDPRESS_AUTH_KEY' 'WORDPRESS_SECURE_AUTH_KEY' 'WORDPRESS_LOGGED_IN_KEY' 'WORDPRESS_NONCE_KEY' 'WORDPRESS_AUTH_SALT' 'WORDPRESS_SECURE_AUTH_SALT' 'WORDPRESS_LOGGED_IN_SALT' 'WORDPRESS_NONCE_SALT');
@@ -132,7 +129,9 @@ if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 			echo "export WORDPRESS_${up}_DB_HOST='127.0.0.1'" >> /etc/environment
 			cp -fr "$HOMEDIR/wordpress" "$HOMEDIR/${i}.$(hostname).com/wordpress"
 			ln -sf "$HOMEDIR/${i}.$(hostname).com" "/var/www/${i}.$(hostname).com"
-	done
+			chown www-data:www-data -R "$HOMEDIR/${i}.$(hostname).com"
+			chmod g+w -R "$HOMEDIR/${i}.$(hostname).com"
+	  done
 		source /etc/environment
 		if [ ! "$WORDPRESS_PRODUCTION_DB_NAME" == "$(hostname)_wordpress_production" ]; then
 			echo "Failed to load env!";
@@ -144,7 +143,7 @@ if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 	mkdir -p "/$HOMEDIR/logs"
 	chmod g+w -R "$HOMEDIR/logs"
 	php "$PWD/util.php" nginx/website.conf > /etc/nginx/sites-available/website.conf
-	ln -sf /etc/ngins/sites-available/website.conf /etc/nginx/sites-enabled/website.conf
+	ln -sf /etc/nginx/sites-available/website.conf /etc/nginx/sites-enabled/website.conf
 	nginx -t
 	service nginx restart
 fi
