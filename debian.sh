@@ -163,11 +163,11 @@ if [[ $@ == *"mysql"* ]] || [[ $@ == *"wordpress"* ]]; then
 	apt install -y -qq \
 		php7.2-mysql
 	# Now we have to do the same as we did for the dev, staging, etc.
+		rm "$ROOT/mysql.sh"
 		for i in 'dev' 'staging' 'production'
 		do
 			echo "Setting up $i"
 			up=${i^^}
-			rm "$ROOT/mysql.sh"
 			echo "\"CREATE DATABASE IF NOT EXISTS \$WORDPRESS_${up}_DB_NAME; GRANT all privileges on \$WORDPRESS_${up}_DB_NAME.* to '\$WORDPRESS_${up}_DB_USER'@'localhost' identified by '\$WORDPRESS_${up}_DB_PASSWORD';FLUSH PRIVILEGES;\" | mysql -u root" >> mysql.sh
 	  done
 fi
