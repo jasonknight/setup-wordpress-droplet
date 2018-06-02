@@ -5,6 +5,7 @@ if [[ $@ == *"wordpress"* ]]; then
 fi
 if [[ $@ == *"fresh"* ]]; then
 	rm -fr "/var/www/$(hostname).com"
+	cat /dev/null > /etc/environment
 fi
 USERNAME=$1
 echo -e "Beginning Debian Installation for $USERNAME\n";
@@ -110,6 +111,7 @@ if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 		ln -sf "./plugins/wp-redis/object-cache.php" "./object-cache.php"
 		cd -
 		cd $HOMEDIR
+		echo "Command is:php $ROOT/util.php wordpress/wp-config.php > $HOMEDIR/wordpress/wp-config.php" 
 		php "$ROOT/util.php" wordpress/wp-config.php > "$HOMEDIR/wordpress/wp-config.php"
 		cd -
 		
