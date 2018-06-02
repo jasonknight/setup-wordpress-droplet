@@ -168,7 +168,7 @@ if [[ $@ == *"mysql"* ]] || [[ $@ == *"wordpress"* ]]; then
 		do
 			echo "Setting up $i"
 			up=${i^^}
-			echo "\"CREATE DATABASE IF NOT EXISTS \$WORDPRESS_${up}_DB_NAME; GRANT all privileges on \$WORDPRESS_${up}_DB_NAME.* to '\$WORDPRESS_${up}_DB_USER'@'localhost' identified by '\$WORDPRESS_${up}_DB_PASSWORD';FLUSH PRIVILEGES;\" | mysql -u root" >> mysql.sh
+			echo "echo \"CREATE DATABASE IF NOT EXISTS \$WORDPRESS_${up}_DB_NAME; GRANT all privileges on \$WORDPRESS_${up}_DB_NAME.* to '\$WORDPRESS_${up}_DB_USER'@'localhost' identified by '\$WORDPRESS_${up}_DB_PASSWORD';FLUSH PRIVILEGES;\" | mysql -u root" >> mysql.sh
 	  done
 fi
 if [ ! -f /swapfile ]; then
