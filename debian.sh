@@ -75,7 +75,10 @@ apt install -y -qq \
 	php7.2-dev \
 	php7.2-intl \
 	php7.2-zip
-ln -sf /etc/php/7.2 /etc/php/active
+if [ ! -f "/etc/php/active" ]; then
+	echo "Creating php active symlink";
+	ln -sf /etc/php/7.2 /etc/php/active
+fi
 php "$PWD/util.php" fpm/pool.d/www.conf > /etc/php/active/fpm/pool.d/www.conf
 service php7.2-fpm restart
 if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
