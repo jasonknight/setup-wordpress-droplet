@@ -133,7 +133,7 @@ if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 			echo "export WORDPRESS_${up}_DB_USER='$(hostname)_${i}'" >> /etc/environment
 			echo "export WORDPRESS_${up}_DB_PASSWORD='$(cat /dev/urandom | tr -dc '_a-zAZ0-9-' | fold -w 12 | head -n 1)'" >> /etc/environment
 			echo "export WORDPRESS_${up}_DB_HOST='127.0.0.1'" >> /etc/environment
-			cp -fr "$HOMEDIR/wordpress" "$HOMEDIR/${i}.$(hostname).com/wordpress"
+			cp -fr "$HOMEDIR/wordpress" "$HOMEDIR/${i}.$(hostname).com/"
 			ln -sf "$HOMEDIR/${i}.$(hostname).com" "/var/www/${i}.$(hostname).com"
 			chown www-data:www-data -R "$HOMEDIR/${i}.$(hostname).com"
 			chmod g+w -R "$HOMEDIR/${i}.$(hostname).com"
