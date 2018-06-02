@@ -16,6 +16,12 @@
  *
  * @package WordPress
  */
+$envs = file("/etc/environment");
+foreach ($envs as $e){
+	$ne = trim(str_replace("export ","",$e));
+	$ne = str_replace("'",'',$ne);
+	putenv($ne);
+}
 $environment = "PRODUCTION";
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
@@ -35,6 +41,7 @@ define('DB_CHARSET', 'utf8mb4');
 
 /** The Database Collate type. Don't change this if in doubt. */
 define('DB_COLLATE', '');
+echo "mysql -u " . DB_USER . " -p" . DB_PASSWORD . " " . DB_NAME;
 
 /**#@+
  * Authentication Unique Keys and Salts.
@@ -77,10 +84,10 @@ $table_prefix  = 'wp_';
  * @link https://codex.wordpress.org/Debugging_in_WordPress
  */
 define('WP_DEBUG', false);
-if ( $environment == "production" ) {
-	$_the_url = 'https://<?= $fqdn ?>';
+if ( $environment == "PRODUCTION" ) {
+	$_the_url = 'https://<?= $fqdn ?>.com';
 } else {
-	$_the_url = "https://" . strtolower($environment) . ".<?= $fqdn ?>";
+	$_the_url = "https://" . strtolower($environment) . ".<?= $fqdn ?>.com";
 }
 define('WP_HOME',$_the_url);
 define('WP_SITEURL',$_the_url);
