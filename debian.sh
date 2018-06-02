@@ -1,4 +1,5 @@
 #!/bin/bash
+ROOT="$PWD"
 if [[ $@ == *"wordpress"* ]]; then
 	echo "Will be setting up wordpress PWD is $PWD";
 fi
@@ -79,7 +80,7 @@ if [ ! -f "/etc/php/active" ]; then
 	echo "Creating php active symlink";
 	ln -sf /etc/php/7.2 /etc/php/active
 fi
-php "$PWD/util.php" fpm/pool.d/www.conf > /etc/php/active/fpm/pool.d/www.conf
+php "$ROOT/util.php" fpm/pool.d/www.conf > /etc/php/active/fpm/pool.d/www.conf
 service php7.2-fpm restart
 if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 	echo "Installing nginx";
@@ -90,12 +91,12 @@ if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 	# accordingly and this is automatical setup
 	rm /etc/nginx/sites-enabled/default
 	rm /etc/nginx/sites-available/default
-	php "$PWD/util.php" nginx/nginx.conf > /etc/nginx/nginx.conf
+	php "$ROOT/util.php" nginx/nginx.conf > /etc/nginx/nginx.conf
 	mkdir -p /etc/nginx/global
-	php "$PWD/util.php" nginx/global/restrictions.conf > /etc/nginx/global/restrictions.conf
+	php "$ROOT/util.php" nginx/global/restrictions.conf > /etc/nginx/global/restrictions.conf
 	if [[ $@ == *"wordpress"* ]]; then
 		echo "Installing wordpress"
-		php "$PWD/util.php" nginx/global/wordpress.conf > /etc/nginx/global/wordpress.conf
+		php "$ROOT/util.php" nginx/global/wordpress.conf > /etc/nginx/global/wordpress.conf
 		cd $HOMEDIR
 		rm -fr wordpress
 		wget -q https://wordpress.org/latest.tar.gz
@@ -109,7 +110,7 @@ if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 		ln -sf "./plugins/wp-redis/object-cache.php" "./object-cache.php"
 		cd -
 		cd $HOMEDIR
-		php "$PWD/util.php" wordpress/wp-config.php > "$HOMEDIR/wordpress/wp-config.php"
+		php "$ROOT/util.php" wordpress/wp-config.php > "$HOMEDIR/wordpress/wp-config.php"
 		cd -
 		
 		declare -a arr=('WORDPRESS_AUTH_KEY' 'WORDPRESS_SECURE_AUTH_KEY' 'WORDPRESS_LOGGED_IN_KEY' 'WORDPRESS_NONCE_KEY' 'WORDPRESS_AUTH_SALT' 'WORDPRESS_SECURE_AUTH_SALT' 'WORDPRESS_LOGGED_IN_SALT' 'WORDPRESS_NONCE_SALT');
@@ -145,7 +146,7 @@ if [[ $@ == *"wordpress"* ]] || [[ $@ == *"nginx"* ]]; then
 	fi
 	mkdir -p "/$HOMEDIR/logs"
 	chmod g+w -R "$HOMEDIR/logs"
-	php "$PWD/util.php" nginx/website.conf > /etc/nginx/sites-available/website.conf
+	php "$ROOT/util.php" nginx/website.conf > /etc/nginx/sites-available/website.conf
 	ln -sf /etc/nginx/sites-available/website.conf /etc/nginx/sites-enabled/website.conf
 	nginx -t
 	service nginx restart
@@ -156,7 +157,7 @@ if [[ $@ == *"mysql"* ]] || [[ $@ == *"wordpress"* ]]; then
 		mysql-server \
 		mysql-client
 	cp -f /etc/mysql/mariadb.conf.d/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf.org
-	php "$PWD/util.php" mariadb/50-server.cnf > /etc/mysql/mariadb.conf.d/50-server.cnf
+	php "$ROOT/util.php" mariadb/50-server.cnf > /etc/mysql/mariadb.conf.d/50-server.cnf
 	apt install -y -qq \
 		php7.2-mysql
 fi
