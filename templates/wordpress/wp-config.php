@@ -80,7 +80,7 @@ define('WP_DEBUG', false);
 if ( $environment == "production" ) {
 	$_the_url = 'https://<?= $fqdn ?>';
 } else {
-	$_the_url = "https://" . strtolower($environment) . ".<?= $fqdn ?>';
+	$_the_url = "https://" . strtolower($environment) . ".<?= $fqdn ?>";
 }
 define('WP_HOME',$_the_url);
 define('WP_SITEURL',$_the_url);
