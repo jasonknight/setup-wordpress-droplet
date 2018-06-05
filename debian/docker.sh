@@ -16,3 +16,6 @@ else
 	curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -qq -
 	add-apt-repository "$SOURCES_LINE"
 fi
+apt -y -qq install docker-ce
+groupadd docker
+
